@@ -1,9 +1,9 @@
 public class Cache {
 	
-	private int cacheAssociativity;
-	private int cacheLineSize;
-	private int cacheSize;
-	private int cacheLatency;
+	protected int cacheAssociativity;
+	protected int cacheLineSize;
+	protected int cacheSize;
+	protected int cacheLatency;
 
 	private int hits;
 	private int misses;
