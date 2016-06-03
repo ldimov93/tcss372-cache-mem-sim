@@ -1,3 +1,9 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bus {
 
@@ -28,6 +34,57 @@ public class Bus {
 
 	}
 	
+	public static void readAddressTrace() {
+		String csvFile = "trace-2k.csv";
+		BufferedReader br = null;
+		String line = "";
+		String csvSplitBy = ",";
+		
+		List<String> list = new ArrayList<String>();
+
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+
+				String[] addressTrace = line.split(csvSplitBy);
+				String instruction = addressTrace[0];
+				String instructionType;
+				String data;
+				
+				if (addressTrace.length == 1) {
+					continue;
+				}
+				if (addressTrace[1] == "0") {
+					instructionType = "read";
+				} else if (addressTrace[1] == "1") {
+					instructionType = "write";
+				}
+				
+				if (addressTrace[2] != "") {
+					data = addressTrace[2];
+				}
+				System.out.println("Line [Instr= " + addressTrace[0] + ", instruction type = " + addressTrace[1] + " data= "
+						+ addressTrace[2] + " ]");
+				
+				// Add to list
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public static void main(String[] args) {
 		
 		Bus getOn = new Bus();
@@ -35,6 +92,7 @@ public class Bus {
 		System.out.println(getOn.CPUA.totalLatency);
 		getOn.CPUA.lookUp(204);
 		System.out.println(getOn.CPUA.totalLatency);
-
+		
+		readAddressTrace();
 	}
 }
