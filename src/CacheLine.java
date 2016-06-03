@@ -2,8 +2,9 @@ public class CacheLine {
 	
 	public long address;
 	public int state;
-	//	public long tag;
-//	public long index;
+	public long tag;
+	public long index;
+	public Cache cache;
 	
 	public static final int MODIFIED = 1;
 	public static final int EXCLUSIVE = 2;
@@ -11,15 +12,14 @@ public class CacheLine {
 	public static final int INVALID = 4;
 	public static final int LINESIZE = 16;
 	
-	public CacheLine(long address) {
+	public CacheLine(long address, Cache cache) {
 		this.address = address;
-				
+		this.cache = cache;
+		index = getIndex(cache);
+		tag = getTag(cache);
+		state = EXCLUSIVE;
 	}
-	public CacheLine() {
-		
-				
-	}
-	
+
 	public long getIndex(Cache cache) {
 		
 		int indexSize = (int) (Math.log(cache.cacheSize / cache.cacheAssociativity) / 
@@ -44,9 +44,11 @@ public class CacheLine {
 public static void main(String[] args) {
 	
 	Cache ca = new Cache(16,4, 16, 10);
-	CacheLine cl = new CacheLine(0x3256a);
+	CacheLine cl = new CacheLine(0x3256a, ca);
 	System.out.println(cl.getIndex(ca));
 	System.out.println(cl.getTag(ca));
+	System.out.println(cl.index);
+	System.out.println(cl.tag);
 	
 }
 }

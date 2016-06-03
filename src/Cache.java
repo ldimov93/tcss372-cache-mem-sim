@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 
 public class Cache {
 	
@@ -8,17 +9,17 @@ public class Cache {
 	protected int cacheLatency;
 
 	private int hits;
-	private int misses;
+	private int reference;
 	
-	private List<CacheLine> cl;
+	private CacheLine[] cacheEntries;
 	
 	public Cache(int cacheLineSize, int cacheAssociativity, int cacheSize, int cacheLatency) {
 		
-		// Add cache lines to list of cache lines based on cache size
-		for(int i = 0; i < cacheSize; i++) {
-			cl.add(new CacheLine());
-        }
-		
+//		// Add cache lines to list of cache lines based on cache size
+//		for(int i = 0; i < cacheSize; i++) {
+//			cl.add(new CacheLine());
+//        }
+		cacheEntries = new CacheLine[cacheLineSize];
 		this.cacheLineSize = cacheLineSize;
 		this.cacheAssociativity = cacheAssociativity;
 		this.cacheSize = cacheSize;
@@ -29,8 +30,8 @@ public class Cache {
 		return hits;
 	}
 	
-	public int getMisses() {
-		return misses;
+	public int getReferences() {
+		return reference;
 	}
 	
 	public int getCacheLatency() {
@@ -41,4 +42,34 @@ public class Cache {
 	public void lookup(long address) {
 		
 	}
+	
+	public void addCacheLine(CacheLine cl) {
+		long index = cl.index;
+		boolean addedFlag = false;
+		for(int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
+			
+			if(cacheEntries[i] == null) {
+				cacheEntries[i] = cl;
+			}
+		}
+	}
+	
+	public void evictCacheLine(long index) {
+		Random random = new Random();
+		int evict = random.nextInt((int) ((index * cacheAssociativity + cacheAssociativity) - (index * cacheAssociativity)
+				+ (index * cacheAssociativity)));
+		
+		if(cacheEntries[evict].state == 1) {
+			//cacheEntries[evict].writeToMem();
+		}
+		cacheEntries[evict] = null;
+	}
 }
+
+
+
+
+
+
+
+
