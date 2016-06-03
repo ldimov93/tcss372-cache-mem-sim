@@ -14,7 +14,8 @@ public class Cache {
 	private CacheLine[] cacheEntries;
 
 	public Cache(int cacheLineSize, int cacheAssociativity, int cacheSize, int cacheLatency) {
-
+		hits = 0;
+		reference = 0;
 		
 		cacheEntries = new CacheLine[cacheSize];
 		this.cacheLineSize = cacheLineSize;
@@ -38,16 +39,12 @@ public class Cache {
 
 	// Lookup given address in cache
 	public boolean lookup(long address) {
-
+		reference++;
 		CacheLine lookup = new CacheLine(address, this);
 		long index = lookup.index;
-//		System.out.println(cacheEntries.length + " size");
-//		System.out.println(index + " index");
-
 		for (int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
-//			System.out.println(i);
-
 			if (cacheEntries[i] != null && lookup.tag == cacheEntries[i].tag) {
+				hits++;
 				return true;
 			}
 		}
@@ -59,10 +56,14 @@ public class Cache {
 		long index = cl.index;
 		boolean addedFlag = false;
 		for (int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
-
 			if (cacheEntries[i] == null) {
 				cacheEntries[i] = cl;
+				addedFlag = true;
 			}
+		}
+		if (!addedFlag) {
+			evictCacheLine(cl.index);
+			addCacheLine(address);
 		}
 	}
 
@@ -70,7 +71,6 @@ public class Cache {
 		Random random = new Random();
 		int evict = random.nextInt((int) ((index * cacheAssociativity + cacheAssociativity)
 				- (index * cacheAssociativity) + (index * cacheAssociativity)));
-
 		if (cacheEntries[evict].state == 1) {
 			// cacheEntries[evict].writeToMem();
 		}
