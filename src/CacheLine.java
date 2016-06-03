@@ -15,6 +15,10 @@ public class CacheLine {
 		this.address = address;
 				
 	}
+	public CacheLine() {
+		
+				
+	}
 	
 	public long getIndex(Cache cache) {
 		

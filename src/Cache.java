@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Cache {
 	
 	protected int cacheAssociativity;
@@ -8,12 +10,14 @@ public class Cache {
 	private int hits;
 	private int misses;
 	
-	private CacheLine cl[];
+	private List<CacheLine> cl;
 	
 	public Cache(int cacheLineSize, int cacheAssociativity, int cacheSize, int cacheLatency) {
 		
-		// create a cache line with given cache line size
-		cl = new CacheLine[cacheLineSize];
+		// Add cache lines to list of cache lines based on cache size
+		for(int i = 0; i < cacheSize; i++) {
+			cl.add(new CacheLine());
+        }
 		
 		this.cacheLineSize = cacheLineSize;
 		this.cacheAssociativity = cacheAssociativity;
@@ -33,4 +37,8 @@ public class Cache {
 		return cacheLatency;
 	}
 	
+	// Lookup given address in cache
+	public void lookup(long address) {
+		
+	}
 }

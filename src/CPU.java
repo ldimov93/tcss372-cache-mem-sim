@@ -8,9 +8,6 @@ public class CPU {
 	private Cache L1d;
 	private Cache L2;
 	
-	// Shared cache
-	private Cache L3;
-	
 	
 	public CPU(Map<String, Integer> param) {
 		// Initialize L1i and L1d
@@ -20,8 +17,6 @@ public class CPU {
 		// Initialize shared L2 cache
 		L2 = new Cache(param.get("cache_line"), param.get("cache_associativity"), param.get("l2_size"), param.get("l2_latency"));
 		
-		
-		// get L3 cache to work with
 	}
 	
 	public Cache getL1i() {
@@ -35,4 +30,5 @@ public class CPU {
 	public Cache getL2() {
 		return L2;
 	}
+	
 }
