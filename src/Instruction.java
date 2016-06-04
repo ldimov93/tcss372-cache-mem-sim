@@ -12,4 +12,12 @@ public class Instruction {
 	public void setInstructionType(String theType) {
 		instructionType = theType;
 	}
+	
+	public long getInstruction() {
+		return instruction;
+	}
+	
+	public String getInstructionType() {
+		return instructionType;
+	}
 }
