@@ -40,7 +40,7 @@ public class Bus {
 		String line = "";
 		String csvSplitBy = ",";
 		
-		List<String> list = new ArrayList<String>();
+		List<Instruction> list = new ArrayList<Instruction>();
 
 		try {
 
@@ -48,26 +48,26 @@ public class Bus {
 			while ((line = br.readLine()) != null) {
 
 				String[] addressTrace = line.split(csvSplitBy);
-				String instruction = addressTrace[0];
-				String instructionType;
-				String data;
+				Instruction instr = new Instruction();
 				
+				instr.setInstruction(Long.parseLong(addressTrace[0]));
 				if (addressTrace.length == 1) {
+					// it's an instruction
+					list.add(instr);
 					continue;
 				}
-				if (addressTrace[1] == "0") {
-					instructionType = "read";
-				} else if (addressTrace[1] == "1") {
-					instructionType = "write";
+				if (addressTrace[1].equals("0")) {
+					instr.setInstructionType("read");
+				} else if (addressTrace[1].equals("1")) {
+					instr.setInstructionType("write");
 				}
 				
 				if (addressTrace[2] != "") {
-					data = addressTrace[2];
+					instr.setData(Long.parseLong(addressTrace[2]));
 				}
-				System.out.println("Line [Instr= " + addressTrace[0] + ", instruction type = " + addressTrace[1] + " data= "
-						+ addressTrace[2] + " ]");
 				
-				// Add to list
+				// Add instruction to list
+				list.add(instr);
 			}
 
 		} catch (FileNotFoundException e) {
