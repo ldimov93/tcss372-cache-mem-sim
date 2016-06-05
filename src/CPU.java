@@ -1,4 +1,3 @@
-import java.util.Map;
 
 public class CPU {
 	// functions: lookup instr., lookup instr/read, lookup instr/write
@@ -11,6 +10,7 @@ public class CPU {
 	protected Memory LM1;
 	protected Memory LM2;
 	protected int totalLatency;
+	protected Bus bus;
 	
 	
 //	public CPU(Map<String, Integer> param) {
@@ -45,7 +45,7 @@ public class CPU {
 			totalLatency += L3.cacheLatency;
 			//loadCacheLineL3(address);
 		} else {// add lookups for the memory
-			totalLatency += LM1.latency;
+			totalLatency += LM1.readLatency;
 			loadCacheLineMemory(address);
 		}
 	}
