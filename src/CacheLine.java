@@ -6,10 +6,10 @@ public class CacheLine {
 	public long index;
 	public Cache cache;
 	
-	public static final int MODIFIED = 1;
-	public static final int EXCLUSIVE = 2;
-	public static final int SHARED = 3;
-	public static final int INVALID = 4;
+	public static final int MODIFIED = 0;
+	public static final int EXCLUSIVE = 1;
+	public static final int SHARED = 2;
+	public static final int INVALID = 3;
 	public static final int LINESIZE = 16;
 	
 	public CacheLine(long address, Cache cache) {
@@ -39,7 +39,32 @@ public class CacheLine {
 		return tag;
 	}
 
-
+	
+	public void setToModified() {
+		int prevState = state;
+		state = MODIFIED;
+		Bus.stateMatrix[prevState][MODIFIED]++;
+	}
+	
+	public void setToExclusive() {
+		int prevState = state;
+		state = EXCLUSIVE;
+		Bus.stateMatrix[prevState][EXCLUSIVE]++;
+	}
+	
+	public void setToShared() {
+		int prevState = state;
+		state = SHARED;
+		Bus.stateMatrix[prevState][SHARED]++;
+	}
+	
+	public void setToInvalid() {
+		int prevState = state;
+		state = INVALID;
+		Bus.stateMatrix[prevState][INVALID]++;
+	}
+	
+	
 
 public static void main(String[] args) {
 	

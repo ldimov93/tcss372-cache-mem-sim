@@ -1,20 +1,25 @@
 
 public class Instruction {
-	private long instruction, data;
+	private long address;
 	private String instructionType;
+	private boolean isData = false;
 	
-	public void setInstruction(long instruction) {
-		this.instruction = instruction;
+	public void setAddress(long address) {
+		this.address = address;
 	}
-	public void setData(long data) {
-		this.data = data;
+	public void setIsData(boolean isData) {
+		this.isData = isData;
 	}
 	public void setInstructionType(String theType) {
 		instructionType = theType;
 	}
 	
-	public long getInstruction() {
-		return instruction;
+	public long getAddress() {
+		return address;
+	}
+	
+	public boolean getIsData() {
+		return isData;
 	}
 	
 	public String getInstructionType() {

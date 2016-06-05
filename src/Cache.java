@@ -6,7 +6,6 @@ public class Cache {
 	protected int cacheLineSize;
 	protected int cacheSize;
 	protected int cacheLatency;
-
 	private int hits;
 	private int reference;
 
@@ -37,9 +36,9 @@ public class Cache {
 	}
 
 	// Lookup given address in cache
-	public boolean lookup(long address) {
+	public boolean lookup(Instruction instr) {
 		reference++;
-		CacheLine lookup = new CacheLine(address, this);
+		CacheLine lookup = new CacheLine(instr.getAddress(), this);
 		long index = lookup.index;
 		for (int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
 			if (cacheEntries[i] != null && lookup.tag == cacheEntries[i].tag) {
@@ -49,9 +48,21 @@ public class Cache {
 		}
 		return false;
 	}
+	
+	public CacheLine snoop(Instruction instr) {
+		CacheLine lookup = new CacheLine(instr.getAddress(), this);
+		long index = lookup.index;
+		for (int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
+			if (cacheEntries[i] != null && lookup.tag == cacheEntries[i].tag) {
+				return cacheEntries[i];
+			}
+		}
+		return null;
+	}
 
-	public void addCacheLine(long address) {
-		CacheLine cl = new CacheLine(address, this);
+	
+	public void addCacheLine(Instruction instr) {
+		CacheLine cl = new CacheLine(instr.getAddress(), this);
 		long index = cl.index;
 		boolean addedFlag = false;
 		for (int i = (int) (index * cacheAssociativity); i < index * cacheAssociativity + cacheAssociativity; i++) {
@@ -62,7 +73,7 @@ public class Cache {
 		}
 		if (!addedFlag) {
 			evictCacheLine(cl.index);
-			addCacheLine(address);
+			addCacheLine(instr);
 		}
 	}
 
@@ -70,7 +81,7 @@ public class Cache {
 		Random random = new Random();
 		int evict = random.nextInt((int) ((index * cacheAssociativity + cacheAssociativity)
 				- (index * cacheAssociativity) + (index * cacheAssociativity)));
-		if (cacheEntries[evict].state == 1) {
+		if (cacheEntries[evict] != null && cacheEntries[evict].state == 0) {
 			// cacheEntries[evict].writeToMem();
 		}
 		cacheEntries[evict] = null;
