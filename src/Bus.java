@@ -195,7 +195,7 @@ public class Bus {
 		}
 		
 		for(int i = list.size() - 50; i < list.size(); i++) {
-			System.out.println("thrid " + i);
+			System.out.println("third " + i);
 
 			getOn.CPUB.lookUp(list.get(i));
 
@@ -248,5 +248,38 @@ public class Bus {
 		
 		in.close();
 		return configs;
+	}
+
+	// Respond to CPU read request
+	public int requestRead(Instruction instr, CPU requester) {
+		int latency = 0;
+		if (requester == CPUA) {
+			
+			// Check local caches of CPUB, since data could be there
+			if (CPUB.getL1d().lookup(instr) && CPUB.getL1d().snoop(instr).state != 3) {
+				
+				// Copy data to local L1 and L2 caches of requester CPU
+				
+				latency += CPUB.getL1d().getCacheLatency();
+			} else if (CPUB.getL2().lookup(instr) && CPUB.getL2().snoop(instr).state != 3) {
+				// Copy data to local L1 and L2 caches of requester CPU
+				
+				latency += CPUB.getL2().getCacheLatency();
+			}	
+		} else if (requester == CPUB) {
+			// Check local caches of CPUB, since data could be there
+			if (CPUA.getL1d().lookup(instr) && CPUA.getL1d().snoop(instr).state != 3) {
+				
+				// Copy data to local L1 and L2 caches of requester CPU
+				
+				latency += CPUA.getL1d().getCacheLatency();
+			} else if (CPUA.getL2().lookup(instr) && CPUA.getL2().snoop(instr).state != 3) {
+				
+				// Copy data to local L1 and L2 caches of requester CPU
+				
+				latency += CPUA.getL2().getCacheLatency();
+			}
+		}
+		return latency;
 	}
 }

@@ -43,9 +43,19 @@ public class CPU {
 		bus.checkModified(instr, this);
 	}
 
+	// read data
 	public void readInstruction(Instruction instr) {
 		
-		
+		// Do a lookup in CPU's local caches L1d and L2
+		if (L1d.lookup(instr) && L1d.snoop(instr).state != 3) {
+			totalLatency += L1d.getCacheLatency();
+		} else if (L2.lookup(instr) && L2.snoop(instr).state != 3) {
+			totalLatency += L2.getCacheLatency();
+		} else {
+			// Request a read on the system bus, since data is either in the other CPU's cache
+			// or in memory
+			totalLatency += bus.requestRead(instr, this);
+		}
 	}
 
 	public void updateCache(Instruction instr) {
@@ -67,6 +77,7 @@ public class CPU {
 				totalLatency += LM2.readLatency;
 			}
 			loadCacheLineMemory(instr);
+			
 		}
 	}
 
