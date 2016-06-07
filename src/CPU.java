@@ -26,20 +26,21 @@ public class CPU {
 	public void lookUp(Instruction instr) {
 		if (instr.getInstructionType() != null && instr.getInstructionType().equals("write")) {
 			writeInstruction(instr);
-		} else if (instr.getInstructionType() != null && instr.getInstructionType().equals("read")) {
-			readInstruction(instr);
+//		} else if (instr.getInstructionType() != null && instr.getInstructionType().equals("read")) {
+//			readInstruction(instr);
 		} else {
 			updateCache(instr);
 		}
 	}
 
 	public void writeInstruction(Instruction instr) {
+		if(!bus.isWriteBack()) {
+			totalLatency += LM2.writeLatency;
+		}
 		updateCache(instr);
-
 		L1d.snoop(instr).setToModified();
 		L2.snoop(instr).setToModified();
 		L3.snoop(instr).setToModified();
-
 		bus.checkModified(instr, this);
 	}
 
@@ -69,7 +70,18 @@ public class CPU {
 		} else if (L3.lookup(instr) && L3.snoop(instr).state != 3) {
 			totalLatency += L3.cacheLatency;
 			loadCacheLineL3(instr);
-			bus.checkShared(instr, this);
+			if(bus.checkShared(instr, this)) {
+				if(L3.snoop(instr).state == 0 && bus.isWriteBack()) {
+					totalLatency += LM2.writeLatency;
+				}
+				if(instr.getIsData()) {
+					L1d.snoop(instr).setToShared();
+				} else {
+					L1i.snoop(instr).setToShared();
+				}
+				L2.snoop(instr).setToShared();
+				L3.snoop(instr).setToShared();
+			}
 		} else {
 			if (instr.getAddress() < LM1.size) {
 				totalLatency += LM1.readLatency;

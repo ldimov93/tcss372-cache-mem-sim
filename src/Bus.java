@@ -21,6 +21,7 @@ public class Bus {
 	protected Cache L3;
 	protected Memory LM1;
 	protected Memory LM2;
+	private Integer writePolicy;
 	public static int[][] stateMatrix;
 	
 	
@@ -37,6 +38,7 @@ public class Bus {
 		CPUA = new CPU(L1iA, L1dA, L2A, L3, LM1, LM2, this);
 		CPUB = new CPU(L1iB, L1dB, L2B, L3, LM1, LM2, this);
 		stateMatrix =  new int[4][4];
+		writePolicy = 0;
 	}
 	
 	public Bus(Map<String, Integer> params) {
@@ -62,56 +64,94 @@ public class Bus {
 		
 		CPUA = new CPU(L1iA, L1dA, L2A, L3, LM1, LM2, this);
 		CPUB = new CPU(L1iB, L1dB, L2B, L3, LM1, LM2, this);
+		writePolicy = params.get("writePolicy");
 		stateMatrix =  new int[4][4];
 
 	}
 	
-	public void checkShared(Instruction instr, CPU cpu) {
-		
+	public boolean isWriteBack() {
+		return writePolicy == 0;
+	}
+	
+	public boolean checkShared(Instruction instr, CPU cpu) {
+		boolean isShared = false;
 		if (cpu == CPUA) {
 			if (CPUB.L1d.snoop(instr) != null) {
 				CPUB.L1d.snoop(instr).setToShared();
+				isShared = true;
 			}
 			if (CPUB.L1i.snoop(instr) != null) {
 				CPUB.L1i.snoop(instr).setToShared();
+				isShared = true;
 			}
 			if (CPUB.L2.snoop(instr) != null) {
 				CPUB.L2.snoop(instr).setToShared();
+				isShared = true;
 			}
 		} else {
 			if (CPUA.L1d.snoop(instr) != null) {
 				CPUA.L1d.snoop(instr).setToShared();
+				isShared = true;
 			}
 			if (CPUA.L1i.snoop(instr) != null) {
 				CPUA.L1i.snoop(instr).setToShared();
+				isShared = true;
 			}
 			if (CPUA.L2.snoop(instr) != null) {
 				CPUA.L2.snoop(instr).setToShared();
+				isShared = true;
 			}
 		}
+		return isShared;
 	}
 		
 	public void checkModified(Instruction instr, CPU cpu) {
 		
 		if (cpu == CPUA) {
-			if (CPUB.L1d.snoop(instr) != null) {
-				CPUB.L1d.snoop(instr).setToInvalid();
-			}
-			if (CPUB.L1i.snoop(instr) != null) {
-				CPUB.L1i.snoop(instr).setToInvalid();
-			}
-			if (CPUB.L2.snoop(instr) != null) {
+			
+			if (CPUB.L2.snoop(instr) != null && CPUB.L2.snoop(instr).state == 0) {
+				if (isWriteBack()) {
+					CPUA.totalLatency += LM2.writeLatency;
+				}
 				CPUB.L2.snoop(instr).setToInvalid();
+				CPUB.L2.snoop(instr).setToShared();
+				CPUA.L1d.snoop(instr).setToShared();
+				CPUA.L2.snoop(instr).setToShared();
+				CPUA.L3.snoop(instr).setToShared();
+				if(CPUB.L1d.snoop(instr) != null) {
+					CPUB.L1d.snoop(instr).setToInvalid();
+					CPUB.L1d.snoop(instr).setToShared();
+				}
+			} else {
+				if (CPUB.L1d.snoop(instr) != null && CPUB.L1d.snoop(instr).state != 3) {
+					CPUB.L1d.snoop(instr).setToInvalid();
+				}
+				if (CPUB.L2.snoop(instr) != null && CPUB.L2.snoop(instr).state != 3) {
+				CPUB.L2.snoop(instr).setToInvalid();
+				}
 			}
 		} else {
-			if (CPUA.L1d.snoop(instr) != null) {
-				CPUA.L1d.snoop(instr).setToInvalid();
-			}
-			if (CPUA.L1i.snoop(instr) != null) {
-				CPUA.L1i.snoop(instr).setToInvalid();
-			}
-			if (CPUA.L2.snoop(instr) != null) {
+			
+			if (CPUA.L2.snoop(instr) != null && CPUA.L2.snoop(instr).state == 0) {
+				if (isWriteBack()) {
+					CPUB.totalLatency += LM2.writeLatency;
+					}				
 				CPUA.L2.snoop(instr).setToInvalid();
+				CPUA.L2.snoop(instr).setToShared();
+				CPUB.L1d.snoop(instr).setToShared();
+				CPUB.L2.snoop(instr).setToShared();
+				CPUB.L3.snoop(instr).setToShared();
+				if(CPUA.L1d.snoop(instr) != null) {
+					CPUA.L1d.snoop(instr).setToInvalid();
+					CPUA.L1d.snoop(instr).setToShared();
+				}
+			} else {
+				if (CPUA.L1d.snoop(instr) != null && CPUA.L1d.snoop(instr).state != 3) {
+					CPUA.L1d.snoop(instr).setToInvalid();
+				}
+				if (CPUB.L2.snoop(instr) != null && CPUB.L2.snoop(instr).state != 3) {
+				CPUB.L2.snoop(instr).setToInvalid();
+				}
 			}
 		}
 	}
