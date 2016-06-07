@@ -135,5 +135,9 @@ public class CPU {
 	public Cache getL2() {
 		return L2;
 	}
+	
+	public Cache getL3() {
+		return L3;
+	}
 
 }

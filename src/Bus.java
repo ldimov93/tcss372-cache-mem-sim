@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class Bus {
 
-	protected CPU CPUA;
-	protected CPU CPUB;
+	protected static CPU CPUA;
+	protected static CPU CPUB;
 	protected Cache L1iA;	
 	protected Cache L1dA;
 	protected Cache L2A;
@@ -241,6 +241,9 @@ public class Bus {
 
 		}
 		
+		
+		generateReport();
+		
 		System.out.println(getOn.CPUA.totalLatency);
 		System.out.println(getOn.CPUA.getL1i().getHits());
 		
@@ -253,6 +256,59 @@ public class Bus {
 		
 	}
 
+	public static void generateReport() {
+		StringBuilder sb = new StringBuilder();
+		float CPUAL1HitRate = (float) (CPUA.getL1i().getHits() + CPUA.getL1d().getHits()) / 
+							  (CPUA.getL1i().getReferences() + CPUA.getL1d().getReferences());
+		float CPUAL1MissRate = (float) (CPUA.getL1i().getMisses() + CPUA.getL1d().getMisses()) / 
+				  			  (CPUA.getL1i().getReferences() + CPUA.getL1d().getReferences());
+		
+		float CPUAL2HitRate = (float) (CPUA.getL2().getHits()) / 
+				  (CPUA.getL2().getReferences() + CPUA.getL2().getReferences());
+		float CPUAL2MissRate = (float) (CPUA.getL2().getMisses() + CPUA.getL2().getMisses()) / 
+	  			  (CPUA.getL2().getReferences() + CPUA.getL2().getReferences());
+		
+		float CPUBL1HitRate = (float) (CPUB.getL1i().getHits() + CPUB.getL1d().getHits()) / 
+				  (CPUB.getL1i().getReferences() + CPUB.getL1d().getReferences());
+		float CPUBL1MissRate = (float) (CPUB.getL1i().getMisses() + CPUB.getL1d().getMisses()) / 
+			  			  (CPUB.getL1i().getReferences() + CPUB.getL1d().getReferences());
+		
+		float CPUBL2HitRate = (float) (CPUB.getL2().getHits()) / 
+			  (CPUB.getL2().getReferences() + CPUB.getL2().getReferences());
+		float CPUBL2MissRate = (float) (CPUB.getL2().getMisses() + CPUB.getL2().getMisses()) / 
+			  (CPUB.getL2().getReferences() + CPUB.getL2().getReferences());
+		
+		float L3HitRate = CPUA.getL3().getHits() / CPUA.getL3().getReferences();
+	    float L3MissRate = CPUA.getL3().getMisses() / CPUA.getL3().getMisses();
+		
+		sb.append("\nCPU A: L1 hit rate: " + CPUAL1HitRate + " L1 miss rate: " + CPUAL1MissRate);
+		sb.append("\nCPU A: L2 hit rate: " + CPUAL2HitRate + " L2 miss rate: " + CPUAL2MissRate);
+		
+		sb.append("\nCPU B: L1 hit rate: " + CPUBL1HitRate + " L1 miss rate: " + CPUBL1MissRate);
+		sb.append("\nCPU B: L2 hit rate: " + CPUBL2HitRate + " L2 miss rate: " + CPUBL2MissRate);
+	    
+	    sb.append("\nL3 hit rate: " + L3HitRate + " L3 miss rate: " + L3MissRate);
+	    
+	    
+	    sb.append("\nStateMatrix:");
+	    sb.append("\nModified -> Exclusive: " + stateMatrix[0][1]);
+	    sb.append("\nModified -> Shared: " + stateMatrix[0][2]);
+	    sb.append("\nModified -> Invalid: " + stateMatrix[0][3]);
+	    sb.append("\nExclusive -> Modified: " + stateMatrix[1][0]);
+	    sb.append("\nExclusive -> Shared: " + stateMatrix[1][2]);
+	    sb.append("\nExclusive -> Invalid: " + stateMatrix[1][3]);
+	    sb.append("\nShared -> Modified: " + stateMatrix[2][0]);
+	    sb.append("\nShared -> Exclusive: " + stateMatrix[2][1]);
+	    sb.append("\nShared -> Invalid: " + stateMatrix[2][3]);
+	    sb.append("\nInvalid -> Modified: " + stateMatrix[3][0]);
+	    sb.append("\nInvalid -> Exclusive: " + stateMatrix[3][1]);
+	    sb.append("\nInvalid -> Shared: " + stateMatrix[3][2]);
+	    
+		System.out.println(sb.toString());
+	}
+	public int[][] getStateMatrix() {
+		return stateMatrix;
+	}
 	private static Map<String, Integer> getConfigInput() {
 		Map<String, Integer> configs = new HashMap<String, Integer>();
 		Scanner in = new Scanner(System.in);

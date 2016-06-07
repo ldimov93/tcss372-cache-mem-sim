@@ -26,7 +26,10 @@ public class Cache {
 	public int getHits() {
 		return hits;
 	}
-
+	
+	public int getMisses() {
+		return reference - hits;
+	}
 	public int getReferences() {
 		return reference;
 	}
