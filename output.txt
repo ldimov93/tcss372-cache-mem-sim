@@ -1,0 +1,53 @@
+
+Number of Instructions: 6000
+Number of Read or Write Instructions: 2995
+CPU A: Latency: 2052599 ns
+CPU B: Latency: 1765549 ns
+Combined Latency: 3818148 ns
+CPU A: Average instruction time: 342
+CPU B: Average instruction time: 294
+CPU A: L1i Hits: 4084
+CPU A: L1i Misses: 1916
+CPU A: L1i Accesses: 6000
+CPU A: L1d Hits: 0
+CPU A: L1d Misses: 2995
+CPU A: L1d Accesses: 2995
+CPU A: L2 Hits: 2
+CPU A: L2 Misses: 4909
+CPU A: L2 Accesses: 4911
+CPU B: L1i Hits: 4084
+CPU B: L1i Misses: 1916
+CPU B: L1i Accesses: 6000
+CPU B: L1d Hits: 0
+CPU B: L1d Misses: 2995
+CPU B: L1d Accesses: 2995
+CPU B: L2 Hits: 0
+CPU B: L2 Misses: 4911
+CPU B: L2 Accesses: 4911
+L3 Hits: 4866
+L3 Misses: 4954
+
+CPU A: L1 hit rate: 45.403%
+CPU A: L1 miss rate: 54.596996%
+CPU A: L2 hit rate: 0.020362452%
+CPU A: L2 miss rate: 99.959274%
+CPU B: L1 hit rate: 45.403%
+CPU B: L1 miss rate: 54.596996%
+CPU B: L2 hit rate: 0.0%
+CPU B: L2 miss rate: 100.0%
+L3 hit rate: 49.551933%
+L3 miss rate: 50.448067%
+
+StateMatrix:
+Modified -> Exclusive: 0
+Modified -> Shared: 5078
+Modified -> Invalid: 2021
+Exclusive -> Modified: 6190
+Exclusive -> Shared: 17235
+Exclusive -> Invalid: 0
+Shared -> Modified: 5805
+Shared -> Exclusive: 0
+Shared -> Invalid: 1178
+Invalid -> Modified: 0
+Invalid -> Exclusive: 0
+Invalid -> Shared: 39

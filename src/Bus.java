@@ -12,9 +12,11 @@
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -231,7 +233,10 @@ public class Bus {
 	
 	//Generates output report
 	public static void generateReport() {
+		PrintStream output;
 		StringBuilder sb = new StringBuilder();
+		
+		
 		float CPUAL1HitRate = (float) (CPUA.getL1i().getHits() + CPUA.getL1d().getHits())
 				/ (CPUA.getL1i().getReferences() + CPUA.getL1d().getReferences());
 		float CPUAL1MissRate = (float) (CPUA.getL1i().getMisses() + CPUA.getL1d().getMisses())
@@ -314,7 +319,15 @@ public class Bus {
 		sb.append("\nInvalid -> Exclusive: " + stateMatrix[3][1]);
 		sb.append("\nInvalid -> Shared: " + stateMatrix[3][2]);
 
-		System.out.println(sb.toString());
+		
+		
+		try {
+			output = new PrintStream(new File("output.txt"));
+			output.println(sb.toString());
+		} catch (FileNotFoundException e) {
+			
+		}
+		
 	}
 
 	public int[][] getStateMatrix() {
