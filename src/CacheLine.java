@@ -1,3 +1,10 @@
+/*
+ * Winfield Brooks
+ * Lachezar Dimov
+ * TCSS 372 Final Project
+ */
+
+
 public class CacheLine {
 	
 	public long address;

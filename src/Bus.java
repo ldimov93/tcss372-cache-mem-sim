@@ -1,3 +1,10 @@
+/*
+ * Winfield Brooks
+ * Lachezar Dimov
+ * TCSS 372 Final Project
+ */
+
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -211,9 +218,11 @@ public class Bus {
 
 		// Bus getOn = new Bus(configs);
 		Bus getOn = new Bus();
+
 		for (int i = 0; i < 50; i++) {
-			// System.out.println("first " + i);
+
 			getOn.CPUA.lookUp(list.get(i));
+
 		}
 
 		for (int i = 0; i < list.size() - 50; i++) {

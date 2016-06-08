@@ -1,16 +1,22 @@
+/*
+ * Winfield Brooks
+ * Lachezar Dimov
+ * TCSS 372 Final Project
+ */
 
 public class CPU {
-	// functions: lookup instr., lookup instr/read, lookup instr/write
 
 	// Local caches
 	protected Cache L1i;
 	protected Cache L1d;
 	protected Cache L2;
+	// Shared cache and memory
 	protected Cache L3;
 	protected Memory LM1;
 	protected Memory LM2;
-	protected int totalLatency;
 	protected Bus bus;
+
+	protected int totalLatency;
 
 	public CPU(Cache l1i, Cache l1d, Cache l2, Cache l3, Memory lm1, Memory lm2, Bus bus) {
 		L1i = l1i;
@@ -23,6 +29,7 @@ public class CPU {
 		this.bus = bus;
 	}
 
+	// Handles separating write instructions from reads and other instructions.
 	public void lookUp(Instruction instr) {
 		if (instr.getInstructionType() != null && instr.getInstructionType().equals("write")) {
 			writeInstruction(instr);
@@ -31,6 +38,10 @@ public class CPU {
 		}
 	}
 
+	/*
+	 * If write through policy will add write latency when a write instruction is called.
+	 * Sets cache lines to modified and invalidates any shared cache lines.
+	 */
 	public void writeInstruction(Instruction instr) {
 		if(!bus.isWriteBack()) {
 			totalLatency += LM2.writeLatency;
@@ -42,6 +53,10 @@ public class CPU {
 		bus.checkModified(instr, this);
 	}
 
+	/*
+	 * Checks if is in local cache and shared cache / memory. Handles setting shared 
+	 * caches to SHARED state.
+	 */
 	public void updateCache(Instruction instr) {
 		if (instr.getIsData() && L1d.lookup(instr) && L1d.snoop(instr).state != 3) {
 			totalLatency += L1d.cacheLatency;
@@ -76,6 +91,7 @@ public class CPU {
 		}
 	}
 
+	//Loads into all levels of cache from memory.
 	public void loadCacheLineMemory(Instruction instr) {
 
 		if (instr.getIsData()) {
@@ -88,6 +104,7 @@ public class CPU {
 
 	}
 
+	//Loads into local caches from L3
 	public void loadCacheLineL3(Instruction instr) {
 
 		if (instr.getIsData()) {
@@ -98,6 +115,7 @@ public class CPU {
 		L2.addCacheLine(instr);
 	}
 
+	//Loads into L1 from L2
 	public void loadCacheLineL2(Instruction instr) {
 
 		if (instr.getIsData()) {

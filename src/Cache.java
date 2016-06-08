@@ -1,3 +1,10 @@
+/*
+ * Winfield Brooks
+ * Lachezar Dimov
+ * TCSS 372 Final Project
+ */
+
+
 import java.util.Random;
 
 public class Cache {
@@ -72,9 +79,13 @@ public class Cache {
 			if (cacheEntries[i] == null) {
 				cacheEntries[i] = cl;
 				addedFlag = true;
+				System.out.println(this+ " added " + instr.getAddress());
+				return;
 			}
 		}
 		if (!addedFlag) {
+			System.out.println(this + " evict " + instr.getAddress());
+
 			evictCacheLine(cl.index);
 			addCacheLine(instr);
 		}
@@ -82,11 +93,11 @@ public class Cache {
 
 	public void evictCacheLine(long index) {
 		Random random = new Random();
-		int evict = random.nextInt((int) ((index * cacheAssociativity + cacheAssociativity)
-				- (index * cacheAssociativity) + (index * cacheAssociativity)));
+		int evict = (int) (random.nextInt(cacheAssociativity) + index * cacheAssociativity);
 		if (cacheEntries[evict] != null && cacheEntries[evict].state == 0) {
 			//cacheEntries[evict].writeToMem();
 		}
+		System.out.println(evict + " : " +index+  " : " + this);
 		cacheEntries[evict] = null;
 	}
 }
