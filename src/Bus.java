@@ -282,27 +282,27 @@ public class Bus {
 		
 		
 //		sb.append("Running time: " + CPUA.totalLatency + CPUB.totalLatency);
-		sb.append("\nCPU A: L1i Hits: " + CPUA.L1i.getMisses());
+		sb.append("\nCPU A: L1i Hits: " + CPUA.L1i.getHits());
 		sb.append("\nCPU A: L1i Misses: " + CPUA.L1i.getMisses());
 		sb.append("\nCPU A: L1i Memory Accesses: " + CPUA.L1i.getReferences());
 		
-		sb.append("\nCPU A: L1d Hits: " + CPUA.L1d.getMisses());
+		sb.append("\nCPU A: L1d Hits: " + CPUA.L1d.getHits());
 		sb.append("\nCPU A: L1d Misses: " + CPUA.L1d.getMisses());
 		sb.append("\nCPU A: L1d Memory Accesses: " + CPUA.L1d.getReferences());
 		
-		sb.append("\nCPU A: L2 Hits: " + CPUA.L2.getMisses());
+		sb.append("\nCPU A: L2 Hits: " + CPUA.L2.getHits());
 		sb.append("\nCPU A: L2 Misses: " + CPUA.L2.getMisses());
 		sb.append("\nCPU A: L2 Memory Accesses: " + CPUA.L2.getReferences());
 		
-		sb.append("\nCPU B: L1i Hits: " + CPUB.L1i.getMisses());
+		sb.append("\nCPU B: L1i Hits: " + CPUB.L1i.getHits());
 		sb.append("\nCPU B: L1i Misses: " + CPUB.L1i.getMisses());
 		sb.append("\nCPU B: L1i Memory Accesses: " + CPUB.L1i.getReferences());
 		
-		sb.append("\nCPU B: L1d Hits: " + CPUB.L1d.getMisses());
+		sb.append("\nCPU B: L1d Hits: " + CPUB.L1d.getHits());
 		sb.append("\nCPU B: L1d Misses: " + CPUB.L1d.getMisses());
 		sb.append("\nCPU B: L1d Memory Accesses: " + CPUB.L1d.getReferences());
 		
-		sb.append("\nCPU B: L2 Hits: " + CPUB.L2.getMisses());
+		sb.append("\nCPU B: L2 Hits: " + CPUB.L2.getHits());
 		sb.append("\nCPU B: L2 Misses: " + CPUB.L2.getMisses());
 		sb.append("\nCPU B: L2 Memory Accesses: " + CPUB.L2.getReferences());
 		
