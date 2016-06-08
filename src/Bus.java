@@ -275,16 +275,47 @@ public class Bus {
 		float CPUBL2MissRate = (float) (CPUB.getL2().getMisses() + CPUB.getL2().getMisses())
 				/ (CPUB.getL2().getReferences() + CPUB.getL2().getReferences());
 
-		float L3HitRate = CPUA.getL3().getHits() / CPUA.getL3().getReferences();
-		float L3MissRate = CPUA.getL3().getMisses() / CPUA.getL3().getMisses();
+		float L3HitRate = (float) CPUA.getL3().getHits() / CPUA.getL3().getReferences();
+		float L3MissRate = (float) CPUA.getL3().getMisses() / CPUA.getL3().getMisses();
 
-		sb.append("\nCPU A: L1 hit rate: " + CPUAL1HitRate + " L1 miss rate: " + CPUAL1MissRate);
-		sb.append("\nCPU A: L2 hit rate: " + CPUAL2HitRate + " L2 miss rate: " + CPUAL2MissRate);
+		
+		
+		
+//		sb.append("Running time: " + CPUA.totalLatency + CPUB.totalLatency);
+		sb.append("\nCPU A: L1i Hits: " + CPUA.L1i.getMisses());
+		sb.append("\nCPU A: L1i Misses: " + CPUA.L1i.getMisses());
+		sb.append("\nCPU A: L1i Memory Accesses: " + CPUA.L1i.getReferences());
+		
+		sb.append("\nCPU A: L1d Hits: " + CPUA.L1d.getMisses());
+		sb.append("\nCPU A: L1d Misses: " + CPUA.L1d.getMisses());
+		sb.append("\nCPU A: L1d Memory Accesses: " + CPUA.L1d.getReferences());
+		
+		sb.append("\nCPU A: L2 Hits: " + CPUA.L2.getMisses());
+		sb.append("\nCPU A: L2 Misses: " + CPUA.L2.getMisses());
+		sb.append("\nCPU A: L2 Memory Accesses: " + CPUA.L2.getReferences());
+		
+		sb.append("\nCPU B: L1i Hits: " + CPUB.L1i.getMisses());
+		sb.append("\nCPU B: L1i Misses: " + CPUB.L1i.getMisses());
+		sb.append("\nCPU B: L1i Memory Accesses: " + CPUB.L1i.getReferences());
+		
+		sb.append("\nCPU B: L1d Hits: " + CPUB.L1d.getMisses());
+		sb.append("\nCPU B: L1d Misses: " + CPUB.L1d.getMisses());
+		sb.append("\nCPU B: L1d Memory Accesses: " + CPUB.L1d.getReferences());
+		
+		sb.append("\nCPU B: L2 Hits: " + CPUB.L2.getMisses());
+		sb.append("\nCPU B: L2 Misses: " + CPUB.L2.getMisses());
+		sb.append("\nCPU B: L2 Memory Accesses: " + CPUB.L2.getReferences());
+		
+		sb.append("\nL3 Hits: " + CPUA.getL3().getHits() + "\nL3 Misses: " + CPUA.getL3().getMisses() + "\n");
+		
+		
+		sb.append("\nCPU A: L1 hit rate: " + CPUAL1HitRate * 100 + "%" + "\nCPU A: L1 miss rate: " + CPUAL1MissRate * 100 + "%");
+		sb.append("\nCPU A: L2 hit rate: " + CPUAL2HitRate * 100 + "%" + "\nCPU A: L2 miss rate: " + CPUAL2MissRate * 100 + "%");
 
-		sb.append("\nCPU B: L1 hit rate: " + CPUBL1HitRate + " L1 miss rate: " + CPUBL1MissRate);
-		sb.append("\nCPU B: L2 hit rate: " + CPUBL2HitRate + " L2 miss rate: " + CPUBL2MissRate);
+		sb.append("\nCPU B: L1 hit rate: " + CPUBL1HitRate * 100 + "%" + "\nCPU B: L1 miss rate: " + CPUBL1MissRate * 100 + "%");
+		sb.append("\nCPU B: L2 hit rate: " + CPUBL2HitRate * 100 + "%" + "\nCPU B: L2 miss rate: " + CPUBL2MissRate * 100 + "%");
 
-		sb.append("\nL3 hit rate: " + L3HitRate + " L3 miss rate: " + L3MissRate);
+		sb.append("\nL3 hit rate: " + L3HitRate * 100 + "%" + "\nL3 miss rate: " + L3MissRate * 100 + "%\n");
 
 		sb.append("\nStateMatrix:");
 		sb.append("\nModified -> Exclusive: " + stateMatrix[0][1]);
