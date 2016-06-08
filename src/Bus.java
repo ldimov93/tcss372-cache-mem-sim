@@ -37,6 +37,7 @@ public class Bus {
 	private Integer writePolicy;
 	public static int[][] stateMatrix;
 	private static int instructionCount;
+	private static int dataCount;
 
 	//Creates default bus config
 	public Bus() {
@@ -181,7 +182,7 @@ public class Bus {
 	 * Reads address trace into list to iterate through.
 	 */
 	public static List<Instruction> readAddressTrace() {
-		String csvFile = "trace-5k.csv";
+		String csvFile = "trace-2k.csv";
 		BufferedReader br = null;
 		String line = "";
 		String csvSplitBy = ",";
@@ -199,6 +200,7 @@ public class Bus {
 				instructionCount++;
 				//if line has data
 				if (addressTrace.length > 1) {
+					dataCount++;
 					Instruction data = new Instruction();
 						data.setAddress(Long.parseLong(addressTrace[2]));
 						data.setIsData(true);
@@ -254,8 +256,10 @@ public class Bus {
 		float L3MissRate = (float) CPUA.getL3().getMisses() / CPUA.getL3().getReferences();
 
 		
-		
-		sb.append("CPU A: Latency: " + CPUA.totalLatency +" ns");
+		sb.append("\nNumber of Instructions: " + instructionCount);
+		sb.append("\nNumber of Read or Write Instructions: " + dataCount);
+
+		sb.append("\nCPU A: Latency: " + CPUA.totalLatency +" ns");
 		sb.append("\nCPU B: Latency: " + CPUB.totalLatency +" ns");
 		sb.append("\nCombined Latency: " + (CPUA.totalLatency + CPUB.totalLatency) +" ns");
 		sb.append("\nCPU A: Average instruction time: " + CPUA.totalLatency / instructionCount);
