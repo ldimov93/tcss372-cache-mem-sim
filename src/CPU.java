@@ -95,12 +95,12 @@ public class CPU {
 	public void loadCacheLineMemory(Instruction instr) {
 
 		if (instr.getIsData()) {
-			L1d.addCacheLine(instr);
+			L1d.addCacheLine(instr, this);
 		} else {
-			L1i.addCacheLine(instr);
+			L1i.addCacheLine(instr, this);
 		}
-		L2.addCacheLine(instr);
-		L3.addCacheLine(instr);
+		L2.addCacheLine(instr, this);
+		L3.addCacheLine(instr, this);
 
 	}
 
@@ -108,20 +108,20 @@ public class CPU {
 	public void loadCacheLineL3(Instruction instr) {
 
 		if (instr.getIsData()) {
-			L1d.addCacheLine(instr);
+			L1d.addCacheLine(instr, this);
 		} else {
-			L1i.addCacheLine(instr);
+			L1i.addCacheLine(instr, this);
 		}
-		L2.addCacheLine(instr);
+		L2.addCacheLine(instr, this);
 	}
 
 	//Loads into L1 from L2
 	public void loadCacheLineL2(Instruction instr) {
 
 		if (instr.getIsData()) {
-			L1d.addCacheLine(instr);
+			L1d.addCacheLine(instr, this);
 		} else {
-			L1i.addCacheLine(instr);
+			L1i.addCacheLine(instr, this);
 		}
 	}
 

@@ -2,6 +2,12 @@
  * Winfield Brooks
  * Lachezar Dimov
  * TCSS 372 Final Project
+ * 
+ * The bus is our main class that connects all the components together. 
+ * The bus can be run 2 was from main. The first is default values that coincide
+ * with the first set of values from the assignment description.  The second is custom
+ * configuration, to do the custom or default comment out the corresponding lines of code 
+ * 366-368 to run default and 370 to run in custom mode.
  */
 
 
@@ -30,7 +36,9 @@ public class Bus {
 	protected Memory LM2;
 	private Integer writePolicy;
 	public static int[][] stateMatrix;
+	private static int instructionCount;
 
+	//Creates default bus config
 	public Bus() {
 		L1iA = new Cache(32, 4, 32, 1);
 		L1dA = new Cache(32, 4, 32, 1);
@@ -47,6 +55,7 @@ public class Bus {
 		writePolicy = 0;
 	}
 
+	//Creates custom bus config
 	public Bus(Map<String, Integer> params) {
 		L1iA = new Cache(params.get("cacheLineSize"), params.get("cacheAssoc"), params.get("L1Size"),
 				params.get("L1Latency"));
@@ -78,6 +87,9 @@ public class Bus {
 		return writePolicy == 0;
 	}
 
+	/*
+	 * If a cache line is hit in L3 the bus checks if it is shared and changes the state.
+	 */
 	public boolean checkShared(Instruction instr, CPU cpu) {
 		boolean isShared = false;
 		if (cpu == CPUA) {
@@ -110,6 +122,10 @@ public class Bus {
 		return isShared;
 	}
 
+	/*
+	 * If a cache line is set to modified checks for shared lines and sets to invalid.
+	 * Will also write if encounters a modified cache line.
+	 */
 	public void checkModified(Instruction instr, CPU cpu) {
 
 		if (cpu == CPUA) {
@@ -161,6 +177,9 @@ public class Bus {
 		}
 	}
 
+	/*
+	 * Reads address trace into list to iterate through.
+	 */
 	public static List<Instruction> readAddressTrace() {
 		String csvFile = "trace-5k.csv";
 		BufferedReader br = null;
@@ -173,12 +192,11 @@ public class Bus {
 
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
-
 				String[] addressTrace = line.split(csvSplitBy);
 				Instruction instr = new Instruction();
 				instr.setAddress(Long.parseLong(addressTrace[0]));
 				instructions.add(instr);
-				
+				instructionCount++;
 				//if line has data
 				if (addressTrace.length > 1) {
 					Instruction data = new Instruction();
@@ -192,7 +210,6 @@ public class Bus {
 					instructions.add(data);
 				}
 			}
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -209,60 +226,8 @@ public class Bus {
 		return instructions;
 	}
 
-	public static void main(String[] args) {
-
-		ArrayList<Instruction> list = (ArrayList<Instruction>) readAddressTrace();
-
-		// Map<String, Integer> configs = new HashMap<String, Integer>();
-		// configs = getConfigInput();
-
-		// Bus getOn = new Bus(configs);
-		Bus getOn = new Bus();
-
-		for (int i = 0; i < 50; i++) {
-
-			getOn.CPUA.lookUp(list.get(i));
-
-		}
-
-		for (int i = 0; i < list.size() - 50; i++) {
-			// System.out.println("second " + i);
-
-			getOn.CPUA.lookUp(list.get(i + 50));
-			getOn.CPUB.lookUp(list.get(i));
-
-		}
-
-		for (int i = list.size() - 50; i < list.size(); i++) {
-			// System.out.println("third " + i);
-
-			getOn.CPUB.lookUp(list.get(i));
-
-		}
-
-		generateReport();
-
-		System.out.println(getOn.CPUA.totalLatency);
-		System.out.println(getOn.CPUA.getL1i().getHits());
-
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				System.out.print(stateMatrix[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println(CPUA.L1i.cacheEntries.length);
-		System.out.println("length of instructions list " + list.size());
-		System.out.println("references A L1i " + getOn.CPUA.L1i.getReferences());
-		System.out.println("hits A L1i " + getOn.CPUA.L1i.getHits());
-		System.out.println("references A L1d " + getOn.CPUA.L1d.getReferences());
-		System.out.println("hits A L1d " + getOn.CPUA.L1d.getHits());
-		System.out.println("references A L2 " + getOn.CPUA.L2.getReferences());
-		System.out.println("hits A L2 " + getOn.CPUA.L2.getHits());
-		System.out.println("references A L3 " + getOn.CPUA.L3.getReferences());
-		System.out.println("hits A L3 " + getOn.CPUA.L3.getHits());
-	}
-
+	
+	//Generates output report
 	public static void generateReport() {
 		StringBuilder sb = new StringBuilder();
 		float CPUAL1HitRate = (float) (CPUA.getL1i().getHits() + CPUA.getL1d().getHits())
@@ -286,35 +251,39 @@ public class Bus {
 				/ (CPUB.getL2().getReferences() + CPUB.getL2().getReferences());
 
 		float L3HitRate = (float) CPUA.getL3().getHits() / CPUA.getL3().getReferences();
-		float L3MissRate = (float) CPUA.getL3().getMisses() / CPUA.getL3().getMisses();
+		float L3MissRate = (float) CPUA.getL3().getMisses() / CPUA.getL3().getReferences();
 
 		
 		
-		
-//		sb.append("Running time: " + CPUA.totalLatency + CPUB.totalLatency);
+		sb.append("CPU A: Latency: " + CPUA.totalLatency +" ns");
+		sb.append("\nCPU B: Latency: " + CPUB.totalLatency +" ns");
+		sb.append("\nCombined Latency: " + (CPUA.totalLatency + CPUB.totalLatency) +" ns");
+		sb.append("\nCPU A: Average instruction time: " + CPUA.totalLatency / instructionCount);
+		sb.append("\nCPU B: Average instruction time: " + CPUB.totalLatency / instructionCount);
+
 		sb.append("\nCPU A: L1i Hits: " + CPUA.L1i.getHits());
 		sb.append("\nCPU A: L1i Misses: " + CPUA.L1i.getMisses());
-		sb.append("\nCPU A: L1i Memory Accesses: " + CPUA.L1i.getReferences());
+		sb.append("\nCPU A: L1i Accesses: " + CPUA.L1i.getReferences());
 		
 		sb.append("\nCPU A: L1d Hits: " + CPUA.L1d.getHits());
 		sb.append("\nCPU A: L1d Misses: " + CPUA.L1d.getMisses());
-		sb.append("\nCPU A: L1d Memory Accesses: " + CPUA.L1d.getReferences());
+		sb.append("\nCPU A: L1d Accesses: " + CPUA.L1d.getReferences());
 		
 		sb.append("\nCPU A: L2 Hits: " + CPUA.L2.getHits());
 		sb.append("\nCPU A: L2 Misses: " + CPUA.L2.getMisses());
-		sb.append("\nCPU A: L2 Memory Accesses: " + CPUA.L2.getReferences());
+		sb.append("\nCPU A: L2 Accesses: " + CPUA.L2.getReferences());
 		
 		sb.append("\nCPU B: L1i Hits: " + CPUB.L1i.getHits());
 		sb.append("\nCPU B: L1i Misses: " + CPUB.L1i.getMisses());
-		sb.append("\nCPU B: L1i Memory Accesses: " + CPUB.L1i.getReferences());
+		sb.append("\nCPU B: L1i Accesses: " + CPUB.L1i.getReferences());
 		
 		sb.append("\nCPU B: L1d Hits: " + CPUB.L1d.getHits());
 		sb.append("\nCPU B: L1d Misses: " + CPUB.L1d.getMisses());
-		sb.append("\nCPU B: L1d Memory Accesses: " + CPUB.L1d.getReferences());
+		sb.append("\nCPU B: L1d Accesses: " + CPUB.L1d.getReferences());
 		
 		sb.append("\nCPU B: L2 Hits: " + CPUB.L2.getHits());
 		sb.append("\nCPU B: L2 Misses: " + CPUB.L2.getMisses());
-		sb.append("\nCPU B: L2 Memory Accesses: " + CPUB.L2.getReferences());
+		sb.append("\nCPU B: L2 Accesses: " + CPUB.L2.getReferences());
 		
 		sb.append("\nL3 Hits: " + CPUA.getL3().getHits() + "\nL3 Misses: " + CPUA.getL3().getMisses() + "\n");
 		
@@ -348,6 +317,7 @@ public class Bus {
 		return stateMatrix;
 	}
 
+	//Console input for custom config
 	private static Map<String, Integer> getConfigInput() {
 		Map<String, Integer> configs = new HashMap<String, Integer>();
 		Scanner in = new Scanner(System.in);
@@ -385,36 +355,31 @@ public class Bus {
 		return configs;
 	}
 
-	// Respond to CPU read request
-	public int requestRead(Instruction instr, CPU requester) {
-		int latency = 0;
-		if (requester == CPUA) {
+	/*
+	 * Main to run default config comment out lines 366-368, to run custom
+	 * config comment out line 370
+	 */
+	public static void main(String[] args) {
 
-			// Check local caches of CPUB, since data could be there
-			if (CPUB.getL1d().lookup(instr) && CPUB.getL1d().snoop(instr).state != 3) {
+		ArrayList<Instruction> list = (ArrayList<Instruction>) readAddressTrace();
 
-				// Copy data to local L1 and L2 caches of requester CPU
+//		Map<String, Integer> configs = new HashMap<String, Integer>(); 	//console prompt config
+//		configs = getConfigInput();			//console prompt config
+//		Bus getOn = new Bus(configs);		//console prompt config
+		
+		Bus getOn = new Bus();			//default configuration
 
-				latency += CPUB.getL1d().getCacheLatency();
-			} else if (CPUB.getL2().lookup(instr) && CPUB.getL2().snoop(instr).state != 3) {
-				// Copy data to local L1 and L2 caches of requester CPU
-
-				latency += CPUB.getL2().getCacheLatency();
-			}
-		} else if (requester == CPUB) {
-			// Check local caches of CPUB, since data could be there
-			if (CPUA.getL1d().lookup(instr) && CPUA.getL1d().snoop(instr).state != 3) {
-
-				// Copy data to local L1 and L2 caches of requester CPU
-
-				latency += CPUA.getL1d().getCacheLatency();
-			} else if (CPUA.getL2().lookup(instr) && CPUA.getL2().snoop(instr).state != 3) {
-
-				// Copy data to local L1 and L2 caches of requester CPU
-
-				latency += CPUA.getL2().getCacheLatency();
-			}
+		for (int i = 0; i < 50; i++) {
+			getOn.CPUA.lookUp(list.get(i));
 		}
-		return latency;
+		for (int i = 0; i < list.size() - 50; i++) {
+			getOn.CPUA.lookUp(list.get(i + 50));
+			getOn.CPUB.lookUp(list.get(i));
+
+		}
+		for (int i = list.size() - 50; i < list.size(); i++) {
+			getOn.CPUB.lookUp(list.get(i));
+		}
+		generateReport();
 	}
 }

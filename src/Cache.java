@@ -59,6 +59,7 @@ public class Cache {
 		return false;
 	}
 	
+	//Return cache line if present in cache
 	public CacheLine snoop(Instruction instr) {
 		CacheLine lookup = new CacheLine(instr.getAddress(), this);
 		long index = lookup.index;
@@ -70,8 +71,8 @@ public class Cache {
 		return null;
 	}
 
-	
-	public void addCacheLine(Instruction instr) {
+	//Adds cache line to cache, calls evict if no space available
+	public void addCacheLine(Instruction instr, CPU cpu) {
 		CacheLine cl = new CacheLine(instr.getAddress(), this);
 		long index = cl.index;
 		boolean addedFlag = false;
@@ -79,25 +80,22 @@ public class Cache {
 			if (cacheEntries[i] == null) {
 				cacheEntries[i] = cl;
 				addedFlag = true;
-				System.out.println(this+ " added " + instr.getAddress());
 				return;
 			}
 		}
 		if (!addedFlag) {
-			System.out.println(this + " evict " + instr.getAddress());
-
-			evictCacheLine(cl.index);
-			addCacheLine(instr);
+			evictCacheLine(cl.index, cpu);
+			addCacheLine(instr, cpu);
 		}
 	}
 
-	public void evictCacheLine(long index) {
+	//Evicts cache line with random policy
+	public void evictCacheLine(long index, CPU cpu) {
 		Random random = new Random();
 		int evict = (int) (random.nextInt(cacheAssociativity) + index * cacheAssociativity);
 		if (cacheEntries[evict] != null && cacheEntries[evict].state == 0) {
-			//cacheEntries[evict].writeToMem();
+			cpu.totalLatency += cpu.LM2.writeLatency;
 		}
-		System.out.println(evict + " : " +index+  " : " + this);
 		cacheEntries[evict] = null;
 	}
 }
