@@ -155,7 +155,7 @@ public class Bus {
 	}
 
 	public static List<Instruction> readAddressTrace() {
-		String csvFile = "trace-win.csv";
+		String csvFile = "trace-5k.csv";
 		BufferedReader br = null;
 		String line = "";
 		String csvSplitBy = ",";

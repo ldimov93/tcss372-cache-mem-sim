@@ -43,7 +43,6 @@ public class CPU {
 	}
 
 	public void updateCache(Instruction instr) {
-		System.out.println(L1i.cacheEntries.length);
 		if (instr.getIsData() && L1d.lookup(instr) && L1d.snoop(instr).state != 3) {
 			totalLatency += L1d.cacheLatency;
 		} else if (!instr.getIsData() && L1i.lookup(instr) && L1i.snoop(instr).state != 3) {

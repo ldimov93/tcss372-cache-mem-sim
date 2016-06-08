@@ -85,9 +85,8 @@ public class Cache {
 		int evict = random.nextInt((int) ((index * cacheAssociativity + cacheAssociativity)
 				- (index * cacheAssociativity) + (index * cacheAssociativity)));
 		if (cacheEntries[evict] != null && cacheEntries[evict].state == 0) {
-			// cacheEntries[evict].writeToMem();
+			//cacheEntries[evict].writeToMem();
 		}
-		System.out.println("get on out " + this);
 		cacheEntries[evict] = null;
 	}
 }
