@@ -9,7 +9,7 @@ public class Cache {
 	private int hits;
 	private int reference;
 
-	private CacheLine[] cacheEntries;
+	protected CacheLine[] cacheEntries;
 
 	public Cache(int cacheLineSize, int cacheAssociativity, int cacheSize, int cacheLatency) {
 		hits = 0;
@@ -87,6 +87,7 @@ public class Cache {
 		if (cacheEntries[evict] != null && cacheEntries[evict].state == 0) {
 			// cacheEntries[evict].writeToMem();
 		}
+		System.out.println("get on out " + this);
 		cacheEntries[evict] = null;
 	}
 }

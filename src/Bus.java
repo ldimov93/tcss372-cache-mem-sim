@@ -155,7 +155,7 @@ public class Bus {
 	}
 
 	public static List<Instruction> readAddressTrace() {
-		String csvFile = "trace-2k.csv";
+		String csvFile = "trace-win.csv";
 		BufferedReader br = null;
 		String line = "";
 		String csvSplitBy = ",";
@@ -242,6 +242,7 @@ public class Bus {
 			}
 			System.out.println();
 		}
+		System.out.println(CPUA.L1i.cacheEntries.length);
 		System.out.println("length of instructions list " + list.size());
 		System.out.println("references A L1i " + getOn.CPUA.L1i.getReferences());
 		System.out.println("hits A L1i " + getOn.CPUA.L1i.getHits());
