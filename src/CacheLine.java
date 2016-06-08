@@ -63,19 +63,6 @@ public class CacheLine {
 		state = INVALID;
 		Bus.stateMatrix[prevState][INVALID]++;
 	}
-	
-	
-
-public static void main(String[] args) {
-	
-	Cache ca = new Cache(32,4, 32, 10);
-	CacheLine cl = new CacheLine(204, ca);
-	System.out.println(cl.getIndex(ca));
-	System.out.println(cl.getTag(ca));
-	System.out.println(cl.index);
-	System.out.println(cl.tag);
-	
-}
 }
 
 
