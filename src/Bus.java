@@ -322,7 +322,7 @@ public class Bus {
 		
 		
 		try {
-			output = new PrintStream(new File("output.txt"));
+			output = new PrintStream(new File("output-2k.txt"));
 			output.println(sb.toString());
 		} catch (FileNotFoundException e) {
 			
@@ -380,11 +380,11 @@ public class Bus {
 
 		ArrayList<Instruction> list = (ArrayList<Instruction>) readAddressTrace();
 
-//		Map<String, Integer> configs = new HashMap<String, Integer>(); 	//console prompt config
-//		configs = getConfigInput();			//console prompt config
-//		Bus getOn = new Bus(configs);		//console prompt config
+		Map<String, Integer> configs = new HashMap<String, Integer>(); 	//console prompt config
+		configs = getConfigInput();			//console prompt config
+		Bus getOn = new Bus(configs);		//console prompt config
 		
-		Bus getOn = new Bus();			//default configuration
+//		Bus getOn = new Bus();			//default configuration
 
 		for (int i = 0; i < 50; i++) {
 			getOn.CPUA.lookUp(list.get(i));

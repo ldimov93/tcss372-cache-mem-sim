@@ -1,0 +1,142 @@
+Cache Line/Block size (bytes): 16
+L1d/L1i size (entries): 32
+L1d/L1d latency (ns): 1
+L2 size (entries): 512
+L2 latency (ns): 10
+L3 size (entries): 2048
+L3 latency (ns): 35
+1LM size (KB): 16
+1LM latency (ns): 100
+2LM size (MB): 1
+2LM latency Reads (ns): 250
+2LM latency Writes (ns): 400
+Cache Associativity (i.e. 4): 4
+Write Policy (0 for writeback or 1 for writethrough): 0
+
+
+Number of Instructions: 6000
+Number of Read or Write Instructions: 2995
+CPU A: Latency: 2080084 ns
+CPU B: Latency: 1758324 ns
+Combined Latency: 3838408 ns
+CPU A: Average instruction time: 346
+CPU B: Average instruction time: 293
+CPU A: L1i Hits: 4084
+CPU A: L1i Misses: 1916
+CPU A: L1i Accesses: 6000
+CPU A: L1d Hits: 0
+CPU A: L1d Misses: 2995
+CPU A: L1d Accesses: 2995
+CPU A: L2 Hits: 0
+CPU A: L2 Misses: 4911
+CPU A: L2 Accesses: 4911
+CPU B: L1i Hits: 4084
+CPU B: L1i Misses: 1916
+CPU B: L1i Accesses: 6000
+CPU B: L1d Hits: 0
+CPU B: L1d Misses: 2995
+CPU B: L1d Accesses: 2995
+CPU B: L2 Hits: 1
+CPU B: L2 Misses: 4910
+CPU B: L2 Accesses: 4911
+L3 Hits: 4868
+L3 Misses: 4953
+
+CPU A: L1 hit rate: 45.403%
+CPU A: L1 miss rate: 54.596996%
+CPU A: L2 hit rate: 0.0%
+CPU A: L2 miss rate: 100.0%
+CPU B: L1 hit rate: 45.403%
+CPU B: L1 miss rate: 54.596996%
+CPU B: L2 hit rate: 0.010181226%
+CPU B: L2 miss rate: 99.97964%
+L3 hit rate: 49.567253%
+L3 miss rate: 50.432747%
+
+StateMatrix:
+Modified -> Exclusive: 0
+Modified -> Shared: 5038
+Modified -> Invalid: 2025
+Exclusive -> Modified: 6208
+Exclusive -> Shared: 17171
+Exclusive -> Invalid: 0
+Shared -> Modified: 5775
+Shared -> Exclusive: 0
+Shared -> Invalid: 1162
+Invalid -> Modified: 0
+Invalid -> Exclusive: 0
+Invalid -> Shared: 35
+
+
+
+
+
+
+Cache Line/Block size (bytes): 64
+L1d/L1i size (entries): 128
+L1d/L1d latency (ns): 2
+L2 size (entries): 1024
+L2 latency (ns): 12
+L3 size (entries): 4096
+L3 latency (ns): 40
+1LM size (KB): 32
+1LM latency (ns): 100
+2LM size (MB): 2
+2LM latency Reads (ns): 250
+2LM latency Writes (ns): 400
+Cache Associativity (i.e. 4): 4
+Write Policy (0 for writeback or 1 for writethrough): 1
+
+
+Number of Instructions: 6000
+Number of Read or Write Instructions: 2995
+CPU A: Latency: 2080084 ns
+CPU B: Latency: 1758324 ns
+Combined Latency: 3838408 ns
+CPU A: Average instruction time: 346
+CPU B: Average instruction time: 293
+CPU A: L1i Hits: 4084
+CPU A: L1i Misses: 1916
+CPU A: L1i Accesses: 6000
+CPU A: L1d Hits: 0
+CPU A: L1d Misses: 2995
+CPU A: L1d Accesses: 2995
+CPU A: L2 Hits: 0
+CPU A: L2 Misses: 4911
+CPU A: L2 Accesses: 4911
+CPU B: L1i Hits: 4084
+CPU B: L1i Misses: 1916
+CPU B: L1i Accesses: 6000
+CPU B: L1d Hits: 0
+CPU B: L1d Misses: 2995
+CPU B: L1d Accesses: 2995
+CPU B: L2 Hits: 1
+CPU B: L2 Misses: 4910
+CPU B: L2 Accesses: 4911
+L3 Hits: 4868
+L3 Misses: 4953
+
+CPU A: L1 hit rate: 45.403%
+CPU A: L1 miss rate: 54.596996%
+CPU A: L2 hit rate: 0.0%
+CPU A: L2 miss rate: 100.0%
+CPU B: L1 hit rate: 45.403%
+CPU B: L1 miss rate: 54.596996%
+CPU B: L2 hit rate: 0.010181226%
+CPU B: L2 miss rate: 99.97964%
+L3 hit rate: 49.567253%
+L3 miss rate: 50.432747%
+
+StateMatrix:
+Modified -> Exclusive: 0
+Modified -> Shared: 5038
+Modified -> Invalid: 2025
+Exclusive -> Modified: 6208
+Exclusive -> Shared: 17171
+Exclusive -> Invalid: 0
+Shared -> Modified: 5775
+Shared -> Exclusive: 0
+Shared -> Invalid: 1162
+Invalid -> Modified: 0
+Invalid -> Exclusive: 0
+Invalid -> Shared: 35
